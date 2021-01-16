@@ -1,64 +1,102 @@
 import 'package:flutter/material.dart';
 
-import './question.dart';
+import './quiz.dart';
+import './result.dart';
 
 void main() => runApp(MyAPP());
 
 class MyAPP extends StatefulWidget {
-
-@override
+  @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
     return _MyAPPState();
   }
 }
 
-class _MyAPPState extends State<MyAPP>{
+class _MyAPPState extends State<MyAPP> {
+  final _questions = const [
+    {
+      'questionText': "What's you favaourite Color?",
+      'answers': [
+        {'text': 'Black', 'score': 10},
+        {'text': 'Red', 'score': 8},
+        {'text': 'Blue', 'score': 6},
+        {'text': 'White', 'score': 2}
+      ]
+    },
+    {
+      'questionText': "What's you favaourite Food?",
+      'answers': [
+        {'text': 'Burger', 'score': 10},
+        {'text': 'Mutton', 'score': 8},
+        {'text': 'Fish', 'score': 6},
+        {'text': 'Milk', 'score': 2}
+      ]
+    },
+    {
+      'questionText': "What's you favaourite Player?",
+      'answers': [
+        {'text': 'Virat', 'score': 10},
+        {'text': 'Mahmudullah', 'score': 8},
+        {'text': 'Tamim', 'score': 6},
+        {'text': 'Sakib', 'score': 2}
+      ]
+    },
+    {
+      'questionText': "What's you favaourite Bird?",
+      'answers': [
+        {'text': 'Doel', 'score': 10},
+        {'text': 'Tia', 'score': 8},
+        {'text': 'Moyna', 'score': 6},
+        {'text': 'Shakil', 'score': 2}
+      ]
+    },
+    {
+      'questionText': "What's is your favourite Animal?",
+      'answers': [
+        {'text': 'Tiger', 'score': 10},
+        {'text': 'Cow', 'score': 8},
+        {'text': 'Monkey', 'score': 6},
+        {'text': 'Wolf', 'score': 2}
+      ]
+    }
+  ];
   var _questionIndex = 0;
+  var _totalScore = 0;
 
-  void _answerQuestion() {
+  void _resetQuiz() {
     setState(() {
-      _questionIndex = _questionIndex + 1;          
-    });    
+      _questionIndex = 0;
+      _totalScore = 0;
+    });
+  }
+
+  void _answerQuestion(int score) {
+    _totalScore = _totalScore + score;
+
+    setState(() {
+      _questionIndex += 1;
+    });
     print(_questionIndex);
+    if (_questionIndex < _questions.length) {
+      print('We have more question');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    var questions = [
-      "What's you favaourite Color?",
-      "What's you favaourite Food?",
-      "What's you favaourite Player?",
-      "What's you favaourite Bird?",
-      "What's is your favourite Animal?"
-    ];
-
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: Text("My First App"),
         ),
-        body: Column(
-          children: [
-            Question(
-              questions[_questionIndex],
-            ),
-            RaisedButton(
-              child: Text("Ans 1"),
-              onPressed: _answerQuestion,
-            ),
-            RaisedButton(
-              child: Text("Ans 2"),
-              onPressed: _answerQuestion,
-            ),
-            RaisedButton(
-              child: Text("Ans 3"),
-              onPressed: _answerQuestion,
-            ),
-          ],
-        ),
+        body: _questionIndex < _questions.length
+            ? Quiz(
+                answerQuestion: _answerQuestion,
+                questionIndex: _questionIndex,
+                questions: _questions)
+            : Result(_totalScore, _resetQuiz),
       ),
     );
   }
 }
-
